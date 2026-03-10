@@ -65,20 +65,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@quizzmaster/core@workspace:packages/core, @quizzmaster/core@workspaces:*":
+"@quizzmaster-backend/core@workspace:packages/core, @quizzmaster-backend/core@workspaces:*":
   version: 0.0.0-use.local
-  resolution: "@quizzmaster/core@workspace:packages/core"
+  resolution: "@quizzmaster-backend/core@workspace:packages/core"
   dependencies:
     dotenv: "npm:^17.2.3"
     fastify: "npm:^5.6.2"
   languageName: unknown
   linkType: soft
 
-"@quizzmaster/utils@workspace:packages/utils":
+"@quizzmaster-backend/utils@workspace:packages/utils":
   version: 0.0.0-use.local
-  resolution: "@quizzmaster/utils@workspace:packages/utils"
+  resolution: "@quizzmaster-backend/utils@workspace:packages/utils"
   dependencies:
-    "@quizzmaster/core": "workspaces:*"
+    "@quizzmaster-backend/core": "workspaces:*"
     common-logger: "workspaces:*"
     dotenv: "npm:^17.2.3"
     fastify: "npm:^5.6.2"
@@ -247,8 +247,8 @@ __metadata:
   linkType: hard
 
 "fastify@npm:^5.6.2":
-  version: 5.7.4
-  resolution: "fastify@npm:5.7.4"
+  version: 5.8.2
+  resolution: "fastify@npm:5.8.2"
   dependencies:
     "@fastify/ajv-compiler": "npm:^4.0.5"
     "@fastify/error": "npm:^4.0.0"
@@ -259,13 +259,13 @@ __metadata:
     fast-json-stringify: "npm:^6.0.0"
     find-my-way: "npm:^9.0.0"
     light-my-request: "npm:^6.0.0"
-    pino: "npm:^10.1.0"
+    pino: "npm:^9.14.0 || ^10.1.0"
     process-warning: "npm:^5.0.0"
     rfdc: "npm:^1.3.1"
     secure-json-parse: "npm:^4.0.0"
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
-  checksum: 10c0/87425737ad4973eac1cb8a2cc00771fae26ccf87f7142d6a100e4b03d92613b050ec2abbb9b54432dfee0bebc5b75f5658c0016e77970cb4fb9d8382729cfc6a
+  checksum: 10c0/f6ee45032d8467c590b665a5d1d4c90b45c8cc51d427d29ff0c42759fa2ab88168bd9a473675bd163991bc84565e4d6ebdb8b914a6ecea5df59844fd1dfc7553
   languageName: node
   linkType: hard
 
@@ -399,7 +399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^10.1.0":
+"pino@npm:^10.1.0, pino@npm:^9.14.0 || ^10.1.0":
   version: 10.3.1
   resolution: "pino@npm:10.3.1"
   dependencies:
@@ -451,9 +451,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"quizzmaster@workspace:.":
+"quizzmaster-backend@workspace:.":
   version: 0.0.0-use.local
-  resolution: "quizzmaster@workspace:."
+  resolution: "quizzmaster-backend@workspace:."
   languageName: unknown
   linkType: soft
 

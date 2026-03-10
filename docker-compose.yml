@@ -7,8 +7,9 @@ services:
       PGPASSWORD: root_password
       PGDATABASE: wtd_db
       PGUSER: wtd_user
+      POSTGRES_PASSWORD: root_password
     ports:
-      - "3306:3306"
+      - "5432:5432"
 
   core-service:
     build:
