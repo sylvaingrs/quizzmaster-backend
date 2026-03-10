@@ -1,0 +1,9 @@
+{
+    "name": "common-logger",
+    "version": "1.0.0",
+    "type": "module",
+    "dependencies": {
+        "pino": "^10.1.0",
+        "pino-pretty": "^13.1.2"
+    }
+}

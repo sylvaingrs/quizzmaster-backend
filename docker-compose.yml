@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      PGPASSWORD: root_password
+      PGDATABASE: wtd_db
+      PGUSER: wtd_user
+    ports:
+      - "3306:3306"
+
+  core-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: core
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: 3000
+      PGHOST: postgres
+      PGPASSWORD: wtd_password
+      PGUSER: wtd_user
+      PGDATABASE: wtd_db
+    depends_on:
+      - postgres
+
+  utils-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: utils
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      CORE_SERVICE_URL: http://core-service:3000
+    depends_on:
+      - core-service
