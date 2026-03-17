@@ -2,35 +2,94 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: root_password
-      POSTGRES_DB: wtd_db
-      POSTGRES_USER: wtd_user  
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}  
     ports:
-      - "3306:3306"
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - core-service
+      - room-service
+      - player-service
+      - spectator-service
 
   core-service:
     build:
       context: .
       args:
         SERVICE_NAME: core
-    ports:
-      - "3001:3000"
     environment:
       PORT: 3000
       PGHOST: postgres
-      PGPASSWORD: wtd_password
-      PGUSER: wtd_user
-      PGDATABASE: wtd_db
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGUSER: ${POSTGRES_USER}
+      PGDATABASE: ${POSTGRES_DB}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
     depends_on:
       - postgres
+      - rabbitmq
 
-  utils-service:
+  room-service:
     build:
       context: .
       args:
-        SERVICE_NAME: utils
-    ports:
-      - "3002:3002"
+        SERVICE_NAME: room
     environment:
-      PORT: 3002
-      CORE_SERVICE_URL: http://core-service:3000
+      CORE_SERVICE_URL: http://${HOSTNAME}:${PORT}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
+    depends_on:
+      - core-service
+      - rabbitmq
+
+  player-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: player
+    environment:
+      CORE_SERVICE_URL: http://${HOSTNAME}:${PORT}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
+    depends_on:
+      - core-service
+      - rabbitmq
+
+  spectator-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: spectator
+    environment:
+      CORE_SERVICE_URL: http://${HOSTNAME}:${PORT}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
+    depends_on:
+      - core-service
+      - rabbitmq
+
+  rmq-service:
+    build:
+      context: .
+      args:
+        SERVICE_NAME: rmq
+    environment:
+      CORE_SERVICE_URL: http://${HOSTNAME}:${PORT}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
+    depends_on:
+      - core-service
+      - rabbitmq
+

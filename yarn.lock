@@ -65,12 +65,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@quizzmaster/core@workspace:packages/core, @quizzmaster/core@workspaces:*":
+"@quizzmaster/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@quizzmaster/core@workspace:packages/core"
   dependencies:
     dotenv: "npm:^17.2.3"
     fastify: "npm:^5.6.2"
+  languageName: unknown
+  linkType: soft
+
+"@quizzmaster/player@workspace:packages/player":
+  version: 0.0.0-use.local
+  resolution: "@quizzmaster/player@workspace:packages/player"
+  dependencies:
+    dotenv: "npm:^17.2.3"
   languageName: unknown
   linkType: soft
 
@@ -83,14 +91,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quizzmaster/utils@workspace:packages/utils":
+"@quizzmaster/room@workspace:packages/room":
   version: 0.0.0-use.local
-  resolution: "@quizzmaster/utils@workspace:packages/utils"
+  resolution: "@quizzmaster/room@workspace:packages/room"
   dependencies:
-    "@quizzmaster/core": "workspaces:*"
-    common-logger: "workspaces:*"
     dotenv: "npm:^17.2.3"
-    fastify: "npm:^5.6.2"
+  languageName: unknown
+  linkType: soft
+
+"@quizzmaster/spectator@workspace:packages/spectator":
+  version: 0.0.0-use.local
+  resolution: "@quizzmaster/spectator@workspace:packages/spectator"
+  dependencies:
+    dotenv: "npm:^17.2.3"
   languageName: unknown
   linkType: soft
 
@@ -168,7 +181,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"common-logger@workspace:packages/common, common-logger@workspaces:*":
+"common-logger@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "common-logger@workspace:packages/common"
   dependencies:
