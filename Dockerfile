@@ -11,4 +11,4 @@ RUN yarn install
 ARG SERVICE_NAME
 ENV SERVICE_NAME=${SERVICE_NAME}
 
-CMD ["sh", "-c", "yarn workspace @quizzmaster/${SERVICE_NAME} run start"]
+CMD ["sh", "-c", "yarn workspace @quizzmaster-backend/${SERVICE_NAME} run start"]

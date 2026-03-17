@@ -1,9 +1,22 @@
 {
-  "name": "hot-path",
-  "packageManager": "yarn@4.11.0",
+  "name": "@quizzmaster-backend/hot-path",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js"
+  },
   "dependencies": {
+    "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^5.2.5",
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.4.2",
+    "@prisma/client-runtime-utils": "^7.4.2",
+    "@yarnpkg/pnpify": "^4.1.6",
     "fastify": "^5.8.2",
-    "fastify-swagger": "^5.2.0"
+    "ioredis": "^5.10.0",
+    "prisma": "^7.4.2"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1",
+    "prisma": "^7.4.2"
   }
 }

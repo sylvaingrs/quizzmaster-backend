@@ -1,41 +1,25 @@
 version: '3.8'
 
 services:
+  valkey:
+    image: valkey/valkey:9.0.3-alpine
+    container_name: valkey
+    ports:
+      - '6379:6379'
+
   postgres:
-    image: postgres
+    image: postgres:16
+    container_name: postgres
+    restart: always
     environment:
-      PGPASSWORD: root_password
-      PGDATABASE: wtd_db
-      PGUSER: wtd_user
-      POSTGRES_PASSWORD: root_password
+      POSTGRES_DB: quizDB
+      POSTGRES_USER: quizUser
+      POSTGRES_PASSWORD: quizPassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  core-service:
-    build:
-      context: .
-      args:
-        SERVICE_NAME: core
-    ports:
-      - "3001:3000"
-    environment:
-      PORT: 3000
-      PGHOST: postgres
-      PGPASSWORD: wtd_password
-      PGUSER: wtd_user
-      PGDATABASE: wtd_db
-    depends_on:
-      - postgres
-
-  utils-service:
-    build:
-      context: .
-      args:
-        SERVICE_NAME: utils
-    ports:
-      - "3002:3002"
-    environment:
-      PORT: 3002
-      CORE_SERVICE_URL: http://core-service:3000
-    depends_on:
-      - core-service
+volumes:
+  postgres_data:
+    driver: local
