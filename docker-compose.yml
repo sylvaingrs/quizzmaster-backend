@@ -3,13 +3,9 @@ version: '3.8'
 services:
   valkey:
     image: valkey/valkey:9.0.3-alpine
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - VALKEY_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    container_name: valkey
     ports:
       - '6379:6379'
-    volumes:
-      - 'valkey_data:/bitnami/valkey/data'
 
   postgres:
     image: postgres:16
@@ -20,11 +16,10 @@ services:
       POSTGRES_USER: quizUser
       POSTGRES_PASSWORD: quizPassword
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
 volumes:
-  valkey_data:
-    driver: local
   postgres_data:
+    driver: local

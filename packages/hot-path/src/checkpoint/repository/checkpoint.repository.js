@@ -11,8 +11,8 @@ export async function saveCheckpoint(roomId, quizId, questionId, scores) {
 }
 
 export async function getLastCheckpoint(roomId) {
-  return await prisma.checkpoint.findFirst({
-    where: { roomId },
-    orderBy: { updatedAt: 'desc' }
-  })
+  return prisma.checkpoint.findFirst({
+    where: {roomId},
+    orderBy: {updatedAt: 'desc'}
+  });
 }

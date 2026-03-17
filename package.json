@@ -4,5 +4,13 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependenciesMeta": {
+    "@prisma/client@7.5.0": {
+      "unplugged": true
+    },
+    "prisma@7.4.2": {
+      "unplugged": true
+    }
+  }
 }
