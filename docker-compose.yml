@@ -81,15 +81,3 @@ services:
       - core-service
       - rabbitmq
 
-  rmq-service:
-    build:
-      context: .
-      args:
-        SERVICE_NAME: rmq
-    environment:
-      CORE_SERVICE_URL: http://${HOSTNAME}:${PORT}
-      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:${RABBITMQ_PORT}
-    depends_on:
-      - core-service
-      - rabbitmq
-
