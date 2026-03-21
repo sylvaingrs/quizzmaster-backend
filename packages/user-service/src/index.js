@@ -19,6 +19,9 @@ app.post('/gateway-user', async (req, res) => {
 
     const r = await result.json()
     console.log('user-service result : ', r)
+
+    // Store to PostgreSQL
+
 })
 
 await app.listen({ port: 3001 })

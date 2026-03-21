@@ -29,6 +29,11 @@ app.post('/user-room', async (req, res) => {
     console.log('room-service result : ', r2)
 
 
+    // Store into cache (Valkey)
+
+    // emit into RabbitMQ
+
+
     return { status: 'OK', data }
 })
 

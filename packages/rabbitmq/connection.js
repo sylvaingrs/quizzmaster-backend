@@ -1,7 +1,4 @@
-import amqp, { Connection, Channel } from 'amqplib'
-
 let connection;
-
 let channel;
 
 export const getChannel = async () => {

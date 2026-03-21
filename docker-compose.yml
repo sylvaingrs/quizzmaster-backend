@@ -21,14 +21,6 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - "8080:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-
   redis:
     image: redis:latest
     container_name: redis
@@ -37,6 +29,87 @@ services:
     environment:
       - REDIS_ARGS= --appendonly yes
     restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: api-gateway
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      USER_SERVICE_URL: http://user-service:3001
+      ROOM_SERVICE_URL: http://room-service:3002
+      QUIZ_SERVICE_URL: http://quizz-service:3003
+      SCORE_SERVICE_URL: http://score-service:3004
+    depends_on:
+      - user-service
+      - room-service
+      - quizz-service
+      - score-service
+
+  user-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: user-service
+    container_name: user-service
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      - postgres
+
+  room-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: room-service
+    container_name: room-service
+    ports:
+      - "3002:3002"
+    environment:
+      VALKEY_HOST: redis
+      VALKEY_PORT: 6379
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    depends_on:
+      - redis
+      - rabbitmq
+
+  quizz-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: quizz-service
+    container_name: quizz-service
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      - postgres
+
+  score-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: score-service
+    container_name: score-service
+    ports:
+      - "3004:3004"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    depends_on:
+      - postgres
+      - rabbitmq
 
 volumes:
   postgres_data:
