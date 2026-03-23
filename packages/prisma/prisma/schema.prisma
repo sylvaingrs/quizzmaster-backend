@@ -1,10 +1,11 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -12,6 +13,66 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id Int @id @default(autoincrement())
+enum RoomStatus {
+  WAITING
+  PLAYING
+  FINISHED
+}
+
+enum PlayerRole {
+  PLAYER
+  GAMEMASTER
+  SPECTATOR
+}
+
+model Quiz {
+  id          Int          @id @default(autoincrement())
+  title       String
+  questions   Question[]
+  rooms       Room[]
+  checkpoints Checkpoint[]
+}
+
+model Question {
+  id            Int          @id @default(autoincrement())
+  quizId        Int
+  title         String
+  options       String[]
+  correctAnswer String[]
+  timeLimit     Int          @default(30)
+  quiz          Quiz         @relation(fields: [quizId], references: [id])
+  checkpoints   Checkpoint[]
+}
+
+model Room {
+  id          String       @id @default(uuid())
+  quizId      Int
+  status      RoomStatus   @default(WAITING)
+  createdAt   DateTime     @default(now())
+  quiz        Quiz         @relation(fields: [quizId], references: [id])
+  players     Player[]
+  checkpoints Checkpoint[]
+}
+
+model Player {
+  id     String     @id @default(uuid())
+  roomId String
+  name   String
+  role   PlayerRole @default(PLAYER)
+  room   Room       @relation(fields: [roomId], references: [id])
+
+  @@unique([roomId, name])
+}
+
+model Checkpoint {
+  roomId     String
+  questionId Int
+  quizId     Int
+  scores     Json
+  updatedAt  DateTime @updatedAt
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id])
+  room       Room     @relation(fields: [roomId], references: [id])
+
+  @@id([roomId, questionId])
 }

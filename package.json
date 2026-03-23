@@ -13,5 +13,10 @@
     "room": "yarn workspace @quizzmaster-backend/room-service run start",
     "quizz": "yarn workspace @quizzmaster-backend/quizz-service run start",
     "score": "yarn workspace @quizzmaster-backend/score-service run start"
+  },
+  "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
+    "dotenv": "^17.3.1"
   }
 }
