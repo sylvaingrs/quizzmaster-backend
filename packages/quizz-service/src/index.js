@@ -9,7 +9,7 @@ app.get('/health', (req, res) => {
 app.post('/room-quizz', async (req, res) => {
     const { data } = req.body
     console.log('quizz-service data : ', data)
-    // Store to PostgreSQL test
+    // Store to PostgreSQL
 
     return { status: 'OK', data }
 })
