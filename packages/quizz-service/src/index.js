@@ -14,4 +14,4 @@ app.post('/room-quizz', async (req, res) => {
     return { status: 'OK', data }
 })
 
-await app.listen({ port: 3003 })
+await app.listen({ port: 3003, host: '0.0.0.0' })

@@ -37,4 +37,4 @@ app.post('/user-room', async (req, res) => {
     return { status: 'OK', data }
 })
 
-await app.listen({ port: 3002 })
+await app.listen({ port: 3002, host: '0.0.0.0' })
