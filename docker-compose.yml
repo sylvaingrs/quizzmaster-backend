@@ -2,8 +2,7 @@ services:
   postgres:
     image: postgres
     container_name: postgres
-    ports:
-      - "5432:5432"
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -14,6 +13,7 @@ services:
   rabbitmq:
     image: rabbitmq:4-management
     container_name: rabbitmq
+    restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -24,8 +24,7 @@ services:
   valkey:
     image: valkey/valkey:9.0.3-alpine
     container_name: valkey
-    ports:
-      - '6379:6379'
+    restart: unless-stopped
 
   api-gateway:
     build:
@@ -34,6 +33,7 @@ services:
       args:
         SERVICE_NAME: api-gateway
     container_name: api-gateway
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
@@ -54,12 +54,13 @@ services:
       args:
         SERVICE_NAME: user-service
     container_name: user-service
-    ports:
-      - "3001:3001"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      ROOM_SERVICE_URL: http://room-service:3002
+    restart: unless-stopped
     depends_on:
       - postgres
+      - room-service
 
   room-service:
     build:
@@ -68,15 +69,20 @@ services:
       args:
         SERVICE_NAME: room-service
     container_name: room-service
-    ports:
-      - "3002:3002"
     environment:
       VALKEY_HOST: valkey
       VALKEY_PORT: 6379
       RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      QUIZ_SERVICE_URL: http://quizz-service:3003
+      SCORE_SERVICE_URL: http://score-service:3004
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    restart: unless-stopped
     depends_on:
       - valkey
       - rabbitmq
+      - quizz-service
+      - score-service
+      - postgres
 
   quizz-service:
     build:
@@ -85,10 +91,9 @@ services:
       args:
         SERVICE_NAME: quizz-service
     container_name: quizz-service
-    ports:
-      - "3003:3003"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    restart: unless-stopped
     depends_on:
       - postgres
 
@@ -99,11 +104,10 @@ services:
       args:
         SERVICE_NAME: score-service
     container_name: score-service
-    ports:
-      - "3004:3004"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    restart: unless-stopped
     depends_on:
       - postgres
       - rabbitmq

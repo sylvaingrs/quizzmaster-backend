@@ -518,6 +518,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/room-service@workspace:packages/room-service"
   dependencies:
+    "@fastify/swagger": "npm:^9.7.0"
+    "@fastify/swagger-ui": "npm:^5.2.5"
+    "@quizzmaster-backend/prisma": "workspace:*"
     fastify: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -2373,9 +2376,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-client-6fdf2f990653eade5c6cf8aa4192458108ad77de25562a42f971db8ed2d95964@workspace:packages/prisma/src/generated/prisma":
+"prisma-client-670c06913f0732a8909ad415ed529342acf891ad58cf72d0989d08a1794183fc@workspace:packages/prisma/src/generated/prisma":
   version: 0.0.0-use.local
-  resolution: "prisma-client-6fdf2f990653eade5c6cf8aa4192458108ad77de25562a42f971db8ed2d95964@workspace:packages/prisma/src/generated/prisma"
+  resolution: "prisma-client-670c06913f0732a8909ad415ed529342acf891ad58cf72d0989d08a1794183fc@workspace:packages/prisma/src/generated/prisma"
   dependencies:
     "@prisma/client-runtime-utils": "npm:7.5.0"
   languageName: unknown
