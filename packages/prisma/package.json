@@ -11,5 +11,13 @@
     "@yarnpkg/pnpify": "^4.1.6",
     "dotenv": "^17.3.1",
     "prisma": "^7.5.0"
+  },
+  "dependenciesMeta": {
+    "@prisma/client": {
+      "unplugged": true
+    },
+    "prisma": {
+      "unplugged": true
+    }
   }
 }
