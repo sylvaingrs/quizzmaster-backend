@@ -2,8 +2,12 @@
   "name": "@quizzmaster-backend/prisma",
   "version": "1.0.0",
   "type": "module",
+  "main": "src/prisma.js",
+  "exports": {
+    ".": "./src/prisma.js"
+  },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/prisma.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",

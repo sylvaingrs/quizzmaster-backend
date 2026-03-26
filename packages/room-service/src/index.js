@@ -1,40 +1,7 @@
-import Fastify from 'fastify'
+import { app } from "./config/fastify.js"
 
-const app = Fastify({ logger: true })
+import { roomRoutes } from "./room/room.controller.js"
 
-app.get('/health', (req, res) => {
-    return { status: 'OK', alive: true }
-})
+await app.register(roomRoutes);
 
-app.post('/user-room', async (req, res) => {
-    const { data } = req.body
-    console.log('room-service data : ', data)
-
-    const result = await fetch('http://localhost:3003/room-quizz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-    })
-    const r = await result.json()
-
-    console.log('room-service result : ', r)
-
-    const result2 = await fetch('http://localhost:3004/room-score', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-    })
-    const r2 = await result2.json()
-
-    console.log('room-service result : ', r2)
-
-
-    // Store into cache (Valkey)
-
-    // emit into RabbitMQ
-
-
-    return { status: 'OK', data }
-})
-
-await app.listen({ port: 3002, host: '0.0.0.0' })
+await app.listen({ port: 3002, host: '0.0.0.0' });
