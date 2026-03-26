@@ -31,6 +31,9 @@ model Quiz {
   questions   Question[]
   rooms       Room[]
   checkpoints Checkpoint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Question {
@@ -42,16 +45,21 @@ model Question {
   timeLimit     Int          @default(30)
   quiz          Quiz         @relation(fields: [quizId], references: [id])
   checkpoints   Checkpoint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Room {
   id          String       @id @default(uuid())
   quizId      Int
   status      RoomStatus   @default(WAITING)
-  createdAt   DateTime     @default(now())
   quiz        Quiz         @relation(fields: [quizId], references: [id])
   players     Player[]
   checkpoints Checkpoint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Player {
@@ -61,6 +69,9 @@ model Player {
   role   PlayerRole @default(PLAYER)
   room   Room       @relation(fields: [roomId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@unique([roomId, name])
 }
 
@@ -69,10 +80,12 @@ model Checkpoint {
   questionId Int
   quizId     Int
   scores     Json
-  updatedAt  DateTime @updatedAt
   quiz       Quiz     @relation(fields: [quizId], references: [id])
   question   Question @relation(fields: [questionId], references: [id])
   room       Room     @relation(fields: [roomId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@id([roomId, questionId])
 }

@@ -482,7 +482,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quizzmaster-backend/prisma@workspace:^, @quizzmaster-backend/prisma@workspace:packages/prisma":
+"@quizzmaster-backend/prisma@workspace:*, @quizzmaster-backend/prisma@workspace:packages/prisma":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/prisma@workspace:packages/prisma"
   dependencies:
@@ -517,7 +517,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/room-service@workspace:packages/room-service"
   dependencies:
+    "@fastify/swagger": "npm:^9.7.0"
+    "@fastify/swagger-ui": "npm:^5.2.5"
+    "@quizzmaster-backend/logger": "workspace:*"
+    "@quizzmaster-backend/prisma": "workspace:*"
     fastify: "npm:^5.8.2"
+    pino-pretty: "npm:^11.0.0"
   languageName: unknown
   linkType: soft
 

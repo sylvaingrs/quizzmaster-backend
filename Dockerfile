@@ -8,6 +8,10 @@ COPY packages ./packages
 
 RUN yarn install
 
+RUN yarn workspace @quizzmaster-backend/prisma run pnpify prisma generate
+
+RUN yarn install
+
 ARG SERVICE_NAME
 ENV SERVICE_NAME=${SERVICE_NAME}
 
