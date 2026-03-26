@@ -1,0 +1,5 @@
+node_modules
+.yarn/cache
+.yarn/unplugged
+packages/*/node_modules
+packages/prisma/src/generated
