@@ -1,5 +1,5 @@
-import {RoomStatus} from "../../types/enums";
-import { PlayerRole } from '../../types/enums'
+import {RoomStatus} from "../../../types/enums";
+import { PlayerRole } from '../../../types/enums'
 
 export interface PlayerEntity {
     id: string
@@ -12,8 +12,8 @@ export interface RoomEntity {
     id: string
     quizId: number
     status: RoomStatus
-    players: PlayerEntity[]
-    checkpoints: CheckpointEntity[]
+    players?: PlayerEntity[]
+    checkpoints?: CheckpointEntity[]
 }
 
 export interface CheckpointEntity {

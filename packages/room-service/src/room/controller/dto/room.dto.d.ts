@@ -1,5 +1,5 @@
-import {RoomStatus} from "../../types/enums";
-import {PlayerEntity} from "./room.entity";
+import {RoomStatus} from "../../../types/enums";
+import {PlayerEntity} from "../../repository/entity/room.entity";
 
 export interface CreateRoomDto {
     quizId: number

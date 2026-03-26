@@ -1,8 +1,11 @@
 import { prisma } from "@quizzmaster-backend/prisma";
+import {NotFoundError} from "../../errors.js";
+
+/** @typedef {import('./entity/room.entity.d.ts').RoomEntity} RoomEntity */
 
 /**
  * @param {number} quizId
- * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity>}
+ * @returns {Promise<RoomEntity>}
  */
 export async function createRoom(quizId){
     return prisma.room.create({
@@ -14,7 +17,7 @@ export async function createRoom(quizId){
 
 /**
  * @param {string} roomId
- * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity | null>}
+ * @returns {Promise<RoomEntity | null>}
  */
 export async function findRoomById(roomId){
     return prisma.room.findUnique({
@@ -32,15 +35,18 @@ export async function findRoomById(roomId){
 /**
  * @param {string} roomId
  * @param {import('../../types/enums.d.ts').RoomStatus} status
- * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity>}
+ * @returns {Promise<RoomEntity>}
  */
-export async function updateStatus(roomId, status){
-    return prisma.room.update({
-        where: {
-            id: roomId
-        },
-        data: {
-            status
+export async function updateStatus(roomId, status) {
+    try {
+        return await prisma.room.update({
+            where: { id: roomId },
+            data: { status }
+        });
+    } catch (e) {
+        if (e.code === 'P2025') {
+            throw new NotFoundError(`Impossible de mettre à jour : Room ${roomId} introuvable`);
         }
-    });
+        throw e;
+    }
 }
