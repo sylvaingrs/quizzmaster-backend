@@ -1,9 +1,9 @@
 import {app} from "./config/fastify.js"
 
-import {roomRoutes} from "./features/room/controller/room.controller.js"
-import {buzzerRoutes} from "./features/buzzer/controller/buzzer.controller.js";
-import {leaderboardRoutes} from "./features/leaderboard/controller/leaderboard.controller.js";
-import {checkpointRoutes} from "./features/checkpoint/controller/checkpoint.controller.js";
+import {roomRoutes} from "./room/controller/room.controller.js"
+import {leaderboardRoutes} from "./features/leaderboard/controller/leaderboard.controller";
+import {checkpointRoutes} from "./features/checkpoint/controller/checkpoint.controller";
+import {buzzerRoutes} from "./features/buzzer/controller/buzzer.controller";
 
 await app.register(roomRoutes);
 
