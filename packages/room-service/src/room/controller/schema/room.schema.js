@@ -5,13 +5,22 @@ const errorSchema = {
     }
 }
 
+export const PlayerSchema = {
+    type: 'object',
+    properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        role: { type: 'string' }
+    }
+}
+
 const roomResponseSchema = {
     type: 'object',
     properties: {
         id: { type: 'string' },
         quizId: { type: 'number' },
         status: { type: 'string' },
-        players: { type: 'array' }
+        players: { type: 'array', items: PlayerSchema }
     }
 }
 
@@ -37,9 +46,10 @@ export const createRoomSchema = {
     summary: 'Créer une room',
     body: {
         type: 'object',
-        required: ['quizId'],
+        required: ['quizId', 'gameMaster'],
         properties: {
-            quizId: { type: 'number' }
+            quizId: { type: 'number' },
+            gameMaster: PlayerSchema
         }
     },
     response: {

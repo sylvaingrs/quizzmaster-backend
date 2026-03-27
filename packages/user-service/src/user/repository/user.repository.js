@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import { prisma } from '@quizzmaster-backend/prisma/src/prisma.js'
+import { prisma } from '@quizzmaster-backend/prisma'
 
 /** @typedef {import('./entity/user.entity.js').RoomEntity} RoomEntity */
 

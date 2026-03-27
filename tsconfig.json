@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "checkJs": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@quizzmaster-backend/*": ["packages/*"]
+    }
+  },
+  "include": ["packages/**/*.js"]
+}

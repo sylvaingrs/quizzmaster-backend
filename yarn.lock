@@ -314,7 +314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client-runtime-utils@npm:7.5.0":
+"@prisma/client-runtime-utils@npm:7.5.0, @prisma/client-runtime-utils@npm:^7.5.0":
   version: 7.5.0
   resolution: "@prisma/client-runtime-utils@npm:7.5.0"
   checksum: 10c0/e27efcdd47120f5fb27d236c5ee70b376a897e45c9b846a6139f843e052d196a12a44d3a0e9bf68dcb660d525478d307c7470829bd13ed92cd16c0c971272531
@@ -488,6 +488,7 @@ __metadata:
   dependencies:
     "@prisma/adapter-pg": "npm:^7.5.0"
     "@prisma/client": "npm:^7.5.0"
+    "@prisma/client-runtime-utils": "npm:^7.5.0"
     "@yarnpkg/pnpify": "npm:^4.1.6"
     dotenv: "npm:^17.3.1"
     prisma: "npm:^7.5.0"
@@ -506,6 +507,7 @@ __metadata:
     "@fastify/cors": "npm:^11.2.0"
     "@fastify/swagger": "npm:^9.7.0"
     "@fastify/swagger-ui": "npm:^5.2.5"
+    "@prisma/client-runtime-utils": "npm:^7.5.0"
     "@quizzmaster-backend/logger": "workspace:*"
     dotenv: "npm:^17.3.1"
     fastify: "npm:^5.8.2"
@@ -521,7 +523,7 @@ __metadata:
     "@fastify/swagger-ui": "npm:^5.2.5"
     "@quizzmaster-backend/logger": "workspace:*"
     "@quizzmaster-backend/prisma": "workspace:*"
-    fastify: "npm:^5.8.2"
+    fastify: "npm:^5.8.4"
     pino-pretty: "npm:^11.0.0"
   languageName: unknown
   linkType: soft
@@ -534,14 +536,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quizzmaster-backend/tools@workspace:*, @quizzmaster-backend/tools@workspace:packages/tools":
+  version: 0.0.0-use.local
+  resolution: "@quizzmaster-backend/tools@workspace:packages/tools"
+  languageName: unknown
+  linkType: soft
+
 "@quizzmaster-backend/user-service@workspace:packages/user-service":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/user-service@workspace:packages/user-service"
   dependencies:
     "@fastify/swagger": "npm:^9.7.0"
     "@fastify/swagger-ui": "npm:^5.2.5"
-    "@quizzmaster-backend/prisma": "workspace:^"
+    "@quizzmaster-backend/logger": "workspace:*"
+    "@quizzmaster-backend/prisma": "workspace:*"
+    "@quizzmaster-backend/tools": "workspace:*"
     fastify: "npm:^5.8.2"
+    pino-pretty: "npm:^11.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1417,6 +1428,29 @@ __metadata:
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
   checksum: 10c0/f6ee45032d8467c590b665a5d1d4c90b45c8cc51d427d29ff0c42759fa2ab88168bd9a473675bd163991bc84565e4d6ebdb8b914a6ecea5df59844fd1dfc7553
+  languageName: node
+  linkType: hard
+
+"fastify@npm:^5.8.4":
+  version: 5.8.4
+  resolution: "fastify@npm:5.8.4"
+  dependencies:
+    "@fastify/ajv-compiler": "npm:^4.0.5"
+    "@fastify/error": "npm:^4.0.0"
+    "@fastify/fast-json-stringify-compiler": "npm:^5.0.0"
+    "@fastify/proxy-addr": "npm:^5.0.0"
+    abstract-logging: "npm:^2.0.1"
+    avvio: "npm:^9.0.0"
+    fast-json-stringify: "npm:^6.0.0"
+    find-my-way: "npm:^9.0.0"
+    light-my-request: "npm:^6.0.0"
+    pino: "npm:^9.14.0 || ^10.1.0"
+    process-warning: "npm:^5.0.0"
+    rfdc: "npm:^1.3.1"
+    secure-json-parse: "npm:^4.0.0"
+    semver: "npm:^7.6.0"
+    toad-cache: "npm:^3.7.0"
+  checksum: 10c0/560ef35d59f96d9900c6e96946736215873ed8aa7a493f61f9489c1bdbddf8f714c735886c00e21077fe9a0ea96539b8b5d6755e8877c464b0b04b6afde9c5ab
   languageName: node
   linkType: hard
 
@@ -2379,6 +2413,14 @@ __metadata:
   checksum: 10c0/b2e61b1064d38e7e1df8291f6d5a7e11f892a3240e00cf2b5e5542bf9abbfe97f3963164aeb56b42c1ab6b8aae3454c57f5bbc1791df0769375542740a7cde72
   languageName: node
   linkType: hard
+
+"prisma-client-670c06913f0732a8909ad415ed529342acf891ad58cf72d0989d08a1794183fc@workspace:packages/prisma/src/generated/prisma":
+  version: 0.0.0-use.local
+  resolution: "prisma-client-670c06913f0732a8909ad415ed529342acf891ad58cf72d0989d08a1794183fc@workspace:packages/prisma/src/generated/prisma"
+  dependencies:
+    "@prisma/client-runtime-utils": "npm:7.5.0"
+  languageName: unknown
+  linkType: soft
 
 "prisma@npm:^7.5.0":
   version: 7.5.0

@@ -5,16 +5,18 @@ import {publish} from "../../../../valkey/publisher.js";
 import {BadRequestError, NotFoundError} from "../../errors.js";
 
 /** @typedef {import('../repository/entity/room.entity.d.ts').RoomEntity} RoomEntity */
+/** @typedef {import('../repository/entity/room.entity.d.ts').PlayerEntity} PlayerEntity */
 /** @typedef {import('../controller/dto/room.dto.d.ts').RoomResponseDto} RoomResponseDto */
 /** @typedef {import('../controller/dto/room.dto.d.ts').GameStepDto} GameStepDto */
 /** @typedef {import('../controller/dto/room.dto.d.ts').QuestionDto} QuestionDto */
 
 /**
  * @param {number} quizId
+ * @param {PlayerEntity} gameMaster
  * @returns {Promise<RoomResponseDto>}
  */
-export async function create(quizId) {
-    return createRoom(quizId)
+export async function create(quizId, gameMaster) {
+    return createRoom(quizId, gameMaster)
 }
 
 /**
