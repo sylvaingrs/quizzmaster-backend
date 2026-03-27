@@ -1,7 +1,7 @@
 // quizz-service.repository.js
 import { QuizzEntity } from "./entity/quizz-service.entity.js";
-import { prisma }      from '../../../../prisma/src/prisma.js';
-import { createLogger }      from '@quizzmaster-backend/logger';
+import { prisma } from '../../../../prisma/src/prisma.js';
+import { createLogger } from "@quizzmaster-backend/logger";
 
 const logger = createLogger('quizz-repository');
 
