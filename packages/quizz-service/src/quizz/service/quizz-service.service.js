@@ -1,44 +1,56 @@
-import {QuizzRepository} from "../repository/quizz-service.repository.js";
+// quizz-service.service.js
+import { QuizzRepository } from "../repository/quizz-service.repository.js";
+import { createLogger }      from '@quizzmaster-backend/logger';
+
+const logger = createLogger('quizz-service');
 
 export class QuizzService {
-
-    constructor () {
+    constructor() {
         this.repository = new QuizzRepository();
     }
 
     /**
      * @param {{ title: string }} dto
-     * @returns { Promise<QuizzEntity> }
+     * @returns {Promise<QuizzEntity>}
      */
-    async createQuizz (dto) {
-        return await this.repository.create(dto);
+    async createQuizz(dto) {
+        logger.debug({ dto }, 'Service: creating quizz');
+        return this.repository.create(dto);
     }
 
-
     /**
-     * @param { number } id
-     * @returns { Promise<QuizzEntity> }
+     * @param {number} id
+     * @returns {Promise<QuizzEntity>}
      */
     async findQuizz(id) {
-        const quizz = await this.repository.findById(id)
-        if (!quizz) throw { statusCode: 404, message: 'Quizz not Found' };
+        logger.debug({ quizzId: id }, 'Service: finding quizz');
+        const quizz = await this.repository.findById(id);
+        if (!quizz) {
+            logger.warn({ quizzId: id }, 'Service: quizz not found');
+            throw { statusCode: 404, message: 'Quizz not Found' };
+        }
         return quizz;
     }
 
     /**
-     * @return { Promise<QuizzEntity[]> }
+     * @returns {Promise<QuizzEntity[]>}
      */
     async findAllQuizz() {
+        logger.debug('Service: finding all quizzs');
         return this.repository.findAll();
     }
 
     /**
-     * @param { number } id
-     * @returns { Promise<QuizzEntity> }
+     * @param {number} id
+     * @returns {Promise<QuizzEntity>}
      */
     async deleteQuizz(id) {
+        logger.debug({ quizzId: id }, 'Service: deleting quizz');
         const quizz = await this.repository.delete(id);
-        if (!quizz) throw { statusCode: 404, message: 'Quizz not Found' };
+        if (!quizz) {
+            logger.warn({ quizzId: id }, 'Service: quizz not found for deletion');
+            throw { statusCode: 404, message: 'Quizz not Found' };
+        }
         return quizz;
     }
 }
