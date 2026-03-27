@@ -1,4 +1,7 @@
 import { prisma } from "@quizzmaster-backend/prisma";
+import {NotFoundError} from "#errors";
+
+/** @typedef {import('./entity/room.entity.d.ts').RoomEntity} RoomEntity */
 
 /**
  * @param {number} quizId
