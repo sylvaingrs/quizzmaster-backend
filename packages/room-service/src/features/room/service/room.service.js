@@ -1,18 +1,20 @@
 import {createRoom, findRoomById, updateStatus} from "../repository/room.repository.js";
 import {QUIZ_SERVICE} from "../../../config/services.js";
-import {valkey} from "../../../../../valkey/client.js"
-import {publish} from "../../../../../valkey/publisher.js";
+import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
 import {BadRequestError, NotFoundError} from "#errors";
+import {publish} from "@quizzmaster-backend/valkey-service/publisher.js";
+import {fetchLeaderboard} from "../../leaderboard/service/leaderboard.service.js";
 
 
 /** @typedef {import('../repository/entity/room.entity.d.ts').RoomEntity} RoomEntity */
 /** @typedef {import('../controller/dto/room.dto.d.ts').RoomResponseDto} RoomResponseDto */
 /** @typedef {import('../controller/dto/room.dto.d.ts').GameStepDto} GameStepDto */
+
 /** @typedef {import('../controller/dto/room.dto.d.ts').QuestionDto} QuestionDto */
 
 /**
  * @param {number} quizId
- * @returns {Promise<RoomResponseDto>}
+ * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity>}
  */
 export async function create(quizId) {
     return createRoom(quizId)
@@ -35,7 +37,7 @@ export async function getRoom(roomId) {
 export async function startGame(roomId) {
     const room = await findRoomById(roomId)
     if (!room) throw new NotFoundError(`Room ${roomId} introuvable`)
-    if (room.status !== 'WAITING') throw new BadRequestError('La room a déjà démarré')
+    if (room.status.toString() !== 'WAITING') throw new BadRequestError('La room a déjà démarré')
 
     const res = await fetch(`${QUIZ_SERVICE}/quizz/${room.quizId}/questions`)
     if (!res.ok) throw new BadRequestError(`Impossible de charger les questions : ${res.statusText}`)
@@ -63,6 +65,8 @@ export async function startGame(roomId) {
         timeLimit: q.timeLimit
     };
 
+    publish('game.started', {roomId: roomId, currentQuestion: currentQuestion})
+
     return {room: roomId, finished: false, currentQuestion: currentQuestion}
 }
 
@@ -78,7 +82,7 @@ export async function nextQuestion(roomId) {
 
     if (index >= questions.length - 1) {
         await endGame(roomId)
-        return { room: roomId, finished: true }
+        return {room: roomId, finished: true}
     }
 
     index += 1
@@ -101,7 +105,9 @@ export async function nextQuestion(roomId) {
         timeLimit: next.timeLimit
     };
 
-    return { room: roomId, finished: false, currentQuestion: currentQuestion }
+    publish('question.changed', {roomId: roomId, currentQuestion: currentQuestion})
+
+    return {room: roomId, finished: false, currentQuestion: currentQuestion}
 }
 
 /**
@@ -117,7 +123,9 @@ export async function endGame(roomId) {
         updateStatus(roomId, 'FINISHED'),
     ])
 
-    publish('quiz.ended', {roomId})
+    const leaderboard = await fetchLeaderboard(roomId)
+
+    publish('game.ended', {roomId: roomId, leaderboard: leaderboard})
 
     return {room: roomId, status: 'FINISHED'}
 }

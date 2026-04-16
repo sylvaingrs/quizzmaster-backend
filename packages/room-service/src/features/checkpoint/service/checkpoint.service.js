@@ -1,5 +1,5 @@
 import {SCORE_SERVICE} from "../../../config/services.js";
-import {valkey} from "../../../../../valkey/client.js";
+import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
 import {NotFoundError, RoomError} from "#errors";
 
 export async function recoverRoom(roomId) {

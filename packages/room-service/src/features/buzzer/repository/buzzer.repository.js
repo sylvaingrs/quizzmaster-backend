@@ -1,4 +1,4 @@
-import { valkey } from '../../../../../valkey/client.js'
+import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
 
 export async function tryBuzz(roomId, userId){
     const result = await valkey.setnx(`room:${roomId}:buzzer`, userId);

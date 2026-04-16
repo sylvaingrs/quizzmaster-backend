@@ -1,5 +1,5 @@
-import {RoomStatus} from "../../types/enums";
-import { PlayerRole } from '../../types/enums'
+import {RoomStatus} from "../../../types/enums";
+import { PlayerRole } from '../../../types/enums'
 
 export interface PlayerEntity {
     id: string

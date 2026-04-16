@@ -3,7 +3,7 @@
 /** @typedef {import('../controller/dto/buzzer.dto.d.ts').AnswerResponseDto} AnswerResponseDto */
 
 import {getBuzzer, getCurrentQuestion, resetBuzzer, tryBuzz} from "../repository/buzzer.repository.js";
-import {valkey} from "../../../../../valkey/client.js";
+import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
 import {publish} from "../../../../../valkey/publisher.js";
 import {BadRequestError, NotFoundError} from "#errors";
 
@@ -17,7 +17,9 @@ export async function buzz(roomId, userId) {
 
     // Ici je vais devoir rajouter le WS
 
-    publish('buzzer', { roomId, userId, canBuzz })
+    if (canBuzz){
+        publish('buzzer.taken', { roomId: roomId, userId: userId })
+    }
 
     return {
         success: canBuzz,
@@ -47,15 +49,10 @@ export async function answer(roomId, answerDto) {
     if (isCorrect) {
         await valkey.zincrby(`leaderboard:${roomId}`, 1, answerDto.userId)
         const scores = await valkey.zrevrange(`leaderboard:${roomId}`, 0, -1, 'WITHSCORES')
-        publish('question.ended', {
-            roomId,
-            scores
-        })
-
-        // Je demande à chalk pour Rabbit
+        publish('scores.updated', {roomId: roomId, leaderboard: scores})
     }
     await resetBuzzer(roomId)
-    publish('buzzer.reset', { roomId })
+    publish('buzzer.reset', {roomId})
 
     return {correct: isCorrect, userId: answerDto.userId}
 }
