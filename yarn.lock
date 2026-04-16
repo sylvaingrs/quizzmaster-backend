@@ -226,6 +226,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/websocket@npm:^11.2.0":
+  version: 11.2.0
+  resolution: "@fastify/websocket@npm:11.2.0"
+  dependencies:
+    duplexify: "npm:^4.1.3"
+    fastify-plugin: "npm:^5.0.0"
+    ws: "npm:^8.16.0"
+  checksum: 10c0/c0bad9e4d34e69fb08b3899e25e18ca85a7474f94c252126b91b0518a17061158d724cfc5a2467e3183e220a9f10830219058f6e176f876df25f28b3f8b231c9
+  languageName: node
+  linkType: hard
+
 "@hono/node-server@npm:1.19.9":
   version: 1.19.9
   resolution: "@hono/node-server@npm:1.19.9"
@@ -525,9 +536,11 @@ __metadata:
   dependencies:
     "@fastify/swagger": "npm:^9.7.0"
     "@fastify/swagger-ui": "npm:^5.2.5"
+    "@fastify/websocket": "npm:^11.2.0"
     "@quizzmaster-backend/logger": "workspace:*"
     "@quizzmaster-backend/prisma": "workspace:*"
-    fastify: "npm:^5.8.4"
+    "@quizzmaster-backend/valkey-service": "workspace:*"
+    fastify: "npm:^5.8.2"
     pino-pretty: "npm:^11.0.0"
   languageName: unknown
   linkType: soft
@@ -540,30 +553,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quizzmaster-backend/tools@workspace:*, @quizzmaster-backend/tools@workspace:packages/tools":
+"@quizzmaster-backend/tools@workspace:packages/tools":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/tools@workspace:packages/tools"
   languageName: unknown
   linkType: soft
 
-"@quizzmaster-backend/user-service@workspace:packages/user-service":
-  version: 0.0.0-use.local
-  resolution: "@quizzmaster-backend/user-service@workspace:packages/user-service"
-  dependencies:
-    "@fastify/swagger": "npm:^9.7.0"
-    "@fastify/swagger-ui": "npm:^5.2.5"
-    "@quizzmaster-backend/logger": "workspace:*"
-    "@quizzmaster-backend/prisma": "workspace:*"
-    "@quizzmaster-backend/tools": "workspace:*"
-    fastify: "npm:^5.8.2"
-    pino-pretty: "npm:^11.0.0"
-  languageName: unknown
-  linkType: soft
-
-"@quizzmaster-backend/valkey-service@workspace:packages/valkey":
+"@quizzmaster-backend/valkey-service@workspace:*, @quizzmaster-backend/valkey-service@workspace:packages/valkey":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/valkey-service@workspace:packages/valkey"
   dependencies:
+    "@quizzmaster-backend/logger": "workspace:*"
     ioredis: "npm:^5.10.0"
   languageName: unknown
   linkType: soft
@@ -1264,6 +1264,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"duplexify@npm:^4.1.3":
+  version: 4.1.3
+  resolution: "duplexify@npm:4.1.3"
+  dependencies:
+    end-of-stream: "npm:^1.4.1"
+    inherits: "npm:^2.0.3"
+    readable-stream: "npm:^3.1.1"
+    stream-shift: "npm:^1.0.2"
+  checksum: 10c0/8a7621ae95c89f3937f982fe36d72ea997836a708471a75bb2a0eecde3330311b1e128a6dad510e0fd64ace0c56bff3484ed2e82af0e465600c82117eadfbda5
+  languageName: node
+  linkType: hard
+
 "effect@npm:3.18.4":
   version: 3.18.4
   resolution: "effect@npm:3.18.4"
@@ -1281,7 +1293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.4":
+"end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.1, end-of-stream@npm:^1.4.4":
   version: 1.4.5
   resolution: "end-of-stream@npm:1.4.5"
   dependencies:
@@ -1461,29 +1473,6 @@ __metadata:
     semver: "npm:^7.6.0"
     toad-cache: "npm:^3.7.0"
   checksum: 10c0/f6ee45032d8467c590b665a5d1d4c90b45c8cc51d427d29ff0c42759fa2ab88168bd9a473675bd163991bc84565e4d6ebdb8b914a6ecea5df59844fd1dfc7553
-  languageName: node
-  linkType: hard
-
-"fastify@npm:^5.8.4":
-  version: 5.8.4
-  resolution: "fastify@npm:5.8.4"
-  dependencies:
-    "@fastify/ajv-compiler": "npm:^4.0.5"
-    "@fastify/error": "npm:^4.0.0"
-    "@fastify/fast-json-stringify-compiler": "npm:^5.0.0"
-    "@fastify/proxy-addr": "npm:^5.0.0"
-    abstract-logging: "npm:^2.0.1"
-    avvio: "npm:^9.0.0"
-    fast-json-stringify: "npm:^6.0.0"
-    find-my-way: "npm:^9.0.0"
-    light-my-request: "npm:^6.0.0"
-    pino: "npm:^9.14.0 || ^10.1.0"
-    process-warning: "npm:^5.0.0"
-    rfdc: "npm:^1.3.1"
-    secure-json-parse: "npm:^4.0.0"
-    semver: "npm:^7.6.0"
-    toad-cache: "npm:^3.7.0"
-  checksum: 10c0/560ef35d59f96d9900c6e96946736215873ed8aa7a493f61f9489c1bdbddf8f714c735886c00e21077fe9a0ea96539b8b5d6755e8877c464b0b04b6afde9c5ab
   languageName: node
   linkType: hard
 
@@ -1715,7 +1704,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:~2.0.4":
+"inherits@npm:^2.0.3, inherits@npm:~2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10c0/4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
@@ -2580,6 +2569,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"readable-stream@npm:^3.1.1":
+  version: 3.6.2
+  resolution: "readable-stream@npm:3.6.2"
+  dependencies:
+    inherits: "npm:^2.0.3"
+    string_decoder: "npm:^1.1.1"
+    util-deprecate: "npm:^1.0.1"
+  checksum: 10c0/e37be5c79c376fdd088a45fa31ea2e423e5d48854be7a22a58869b4e84d25047b193f6acb54f1012331e1bcd667ffb569c01b99d36b0bd59658fb33f513511b7
+  languageName: node
+  linkType: hard
+
 "readable-stream@npm:^4.0.0":
   version: 4.7.0
   resolution: "readable-stream@npm:4.7.0"
@@ -2861,7 +2861,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string_decoder@npm:^1.3.0":
+"stream-shift@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "stream-shift@npm:1.0.3"
+  checksum: 10c0/939cd1051ca750d240a0625b106a2b988c45fb5a3be0cebe9a9858cb01bc1955e8c7b9fac17a9462976bea4a7b704e317c5c2200c70f0ca715a3363b9aa4fd3b
+  languageName: node
+  linkType: hard
+
+"string_decoder@npm:^1.1.1, string_decoder@npm:^1.3.0":
   version: 1.3.0
   resolution: "string_decoder@npm:1.3.0"
   dependencies:
@@ -3025,6 +3032,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"util-deprecate@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "util-deprecate@npm:1.0.2"
+  checksum: 10c0/41a5bdd214df2f6c3ecf8622745e4a366c4adced864bc3c833739791aeeeb1838119af7daed4ba36428114b5c67dcda034a79c882e97e43c03e66a4dd7389942
+  languageName: node
+  linkType: hard
+
 "valibot@npm:1.2.0":
   version: 1.2.0
   resolution: "valibot@npm:1.2.0"
@@ -3052,6 +3066,21 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 10c0/56fece1a4018c6a6c8e28fbc88c87e0fbf4ea8fd64fc6c63b18f4acc4bd13e0ad2515189786dd2c30d3eec9663d70f4ecf699330002f8ccb547e4a18231fc9f0
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.16.0":
+  version: 8.20.0
+  resolution: "ws@npm:8.20.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/956ac5f11738c914089b65878b9223692ace77337ba55379ae68e1ecbeae9b47a0c6eb9403688f609999a58c80d83d99865fe0029b229d308b08c1ef93d4ea14
   languageName: node
   linkType: hard
 

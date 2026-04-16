@@ -47,21 +47,6 @@ services:
       - quizz-service
       - score-service
 
-  user-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: user-service
-    container_name: user-service
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      ROOM_SERVICE_URL: http://room-service:3002
-    restart: unless-stopped
-    depends_on:
-      - postgres
-      - room-service
-
   room-service:
     build:
       context: .

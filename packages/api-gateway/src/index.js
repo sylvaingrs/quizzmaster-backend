@@ -6,12 +6,6 @@ const app = Fastify({ logger: true })
 
 app.register(async (api) => {
     api.register(httpProxy, {
-        upstream: process.env.USER_SERVICE_URL ?? 'http://localhost:3001',
-        prefix: '/user',
-        rewritePrefix: '',
-    })
-
-    api.register(httpProxy, {
         upstream: process.env.ROOM_SERVICE_URL ?? 'http://localhost:3002',
         prefix: '/room',
         rewritePrefix: '',
