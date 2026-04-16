@@ -12,11 +12,11 @@
     "down": "docker compose down",
     "lint": "eslint --cache . && tsc",
     "tsc": "tsc",
-    "gateway": "yarn workspace @quizzmaster-backend/api-gateway run start",
+    "gateweay": "yarn workspace @quizzmaster-backend/api-gateway run start",
     "user": "yarn workspace @quizzmaster-backend/user-service run start",
     "room": "yarn workspace @quizzmaster-backend/room-service run start",
     "quizz": "yarn workspace @quizzmaster-backend/quizz-service run start",
-    "score": "yarn workspace @quizzmaster-backend/score-service run start"
+    "score": "yarn workspace @quizzmastr-backend/score-service run start"
   },
   "dependencies": {
     "@fastify/swagger": "^9.7.0",

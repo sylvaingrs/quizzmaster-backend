@@ -83,25 +83,3 @@ export const joinRoomSchema = {
         500: errorSchema
     }
 }
-
-export const gatewayUserSchema = {
-    tags: ['Room'],
-    summary: 'Proxy vers room-service',
-    body: {
-        type: 'object',
-        required: ['data'],
-        properties: {
-            data: {}
-        }
-    },
-    response: {
-        200: {
-            type: 'object',
-            properties: {
-                status: { type: 'string' }
-            }
-        },
-        400: errorSchema,
-        500: errorSchema
-    }
-}

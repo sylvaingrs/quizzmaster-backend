@@ -1,6 +1,6 @@
 import {RoomError} from "@quizzmaster-backend/tools/errors"
-import {createRoom, forwardGatewayUser, getRoom, joinRoom} from "../service/user.service.js"
-import {createRoomSchema, gatewayUserSchema, getRoomSchema, joinRoomSchema} from "./schema/user.schema.js"
+import {createRoom, getRoom, joinRoom} from "../service/user.service.js"
+import {createRoomSchema, getRoomSchema, joinRoomSchema} from "./schema/user.schema.js"
 
 /**
  * @param {Error} error
@@ -40,15 +40,6 @@ export async function userRoutes(app) {
     app.post('/rooms/:roomId/join', { schema: joinRoomSchema }, async (req, reply) => {
         try {
             const result = await joinRoom(req.params.roomId, req.body.pseudo)
-            return reply.send(result)
-        } catch (error) {
-            return handleError(error, reply)
-        }
-    })
-
-    app.post('/gateway-user', { schema: gatewayUserSchema }, async (req, reply) => {
-        try {
-            const result = await forwardGatewayUser(req.body.data)
             return reply.send(result)
         } catch (error) {
             return handleError(error, reply)

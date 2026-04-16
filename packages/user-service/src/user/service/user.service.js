@@ -33,29 +33,10 @@ export async function getRoom(roomId) {
  * @param {string} pseudo
  * @returns {Promise<{ roomId: string, pseudo: string, role: string }>}
  */
-export async function joinRoom(roomId, pseudo) {
+export async function joinRoom(roomId, pseudo, _role) {
     const room = await findRoomById(roomId)
     if (!room) throw new NotFoundError(`Room ${roomId} introuvable`)
 
     const role = room.status === 'WAITING' ? 'PLAYER' : 'SPECTATOR'
     return joinRoomRepository(roomId, pseudo, role)
-}
-
-/**
- * @param {unknown} data
- * @returns {Promise<{ status: string }>}
- */
-export async function forwardGatewayUser(data) {
-    const result = await fetch(`${ROOM_SERVICE}/user-room`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-    })
-
-    if (!result.ok) {
-        throw new BadRequestError('Failed to forward data to room service')
-    }
-
-    await result.json()
-    return { status: 'OK' }
 }
