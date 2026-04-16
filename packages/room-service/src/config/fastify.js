@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
-import {createFastifyLoggerConfig} from "@quizzmaster-backend/logger/logger/index.js";
+import {createFastifyLoggerConfig} from "@quizzmaster-backend/logger";
 
 export const app = Fastify({
     logger: createFastifyLoggerConfig('room-service'),

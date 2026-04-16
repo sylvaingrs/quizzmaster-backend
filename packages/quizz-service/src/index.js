@@ -5,7 +5,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import {quizzController} from "./quizz/controller/quizz-service.controller.js";
 import fastifyCors from '@fastify/cors';
 import { questionController } from "./question/controller/question-service.controller.js";
-import { createFastifyLoggerConfig } from "@quizzmaster-backend/logger/logger/index.js";
+import { createFastifyLoggerConfig } from "@quizzmaster-backend/logger";
 
 dotenv.config();
 const app = Fastify({

@@ -6,12 +6,29 @@ Plutôt que de tout lancer via Docker Compose et d'avoir les logs mélangés, vo
 
 **Attention très importante :** Contrairement à Docker où chaque service est isolé et peut utiliser le port 3000 en interne, sur votre machine physique (localhost), **vous devez attribuer un port différent à chaque service** pour éviter un conflit (erreur `EADDRINUSE`).
 
-### 1. Lancer l'infrastructure (Bases de données & Message Broker)
+### Prérequis
 
-Démarrez uniquement Postgres et RabbitMQ en se basant sur le fichier docker-compose :
+Setup de prisma :
+
+Placez-vous dans le dossier `packages/prisma` et exécutez la commande suivante pour initialiser la base de données :
 
 ```bash
-docker compose up -d postgres rabbitmq
+cd packages/prisma
+yarn pnpify prisma migrate dev --name init
+```
+
+Ensuite pour générer le client Prisma, exécutez la commande suivante :
+
+```bash
+yarn workspace @quizzmaster-backend/prisma run pnpify prisma generate
+```
+
+### 1. Lancer l'infrastructure (Bases de données & Message Broker)
+
+Démarrez uniquement Postgres, RabbitMQ et Nginx avec la commande suivante :
+
+```bash
+docker compose -f docker-compose.dev.yml up -d
 ```
 
 ### 2. Lancer les microservices (un par terminal)

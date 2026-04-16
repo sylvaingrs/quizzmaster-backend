@@ -13,13 +13,13 @@ function handleError(error, reply) {
     if (error instanceof RoomError) {
         return reply.status(error.status).send({message: error.message})
     }
-    return reply.status(500).send({message: 'Internal Server Error'})
+    return reply.status(500).send({message: error.message, stack: error.stack, cause : error.cause})
 }
 
 export async function roomRoutes(app) {
     app.post('/', {schema: createRoomSchema}, async (req, reply) => {
         try {
-            const room = await create(req.body.quizId)
+            const room = await create(req.body.quizId, req.body.gameMaster)
             return reply.status(201).send(room)
         } catch (error) {
             return handleError(error, reply)

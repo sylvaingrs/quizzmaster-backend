@@ -1,16 +1,30 @@
 import { prisma } from "@quizzmaster-backend/prisma";
 import {NotFoundError} from "../../errors.js";
 
-/** @typedef {import('./entity/room.entity.d.ts').RoomEntity} RoomEntity */
+/** 
+ * @typedef {import('./entity/room.entity.d.ts').RoomEntity} RoomEntity 
+ * @typedef {import('./entity/room.entity.d.ts').PlayerEntity} PlayerEntity
+*/
+
 
 /**
  * @param {number} quizId
+ * @param {PlayerEntity} gameMaster
  * @returns {Promise<RoomEntity>}
  */
-export async function createRoom(quizId){
+export async function createRoom(quizId, gameMaster){
     return prisma.room.create({
         data: {
             quizId,
+            players: { create: [gameMaster] }
+        },
+        include: {
+            players: true,
+            checkpoints: true
+        },
+        omit: {
+            createdAt: true,
+            updatedAt: true
         }
     });
 }

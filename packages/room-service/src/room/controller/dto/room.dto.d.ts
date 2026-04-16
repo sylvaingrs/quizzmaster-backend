@@ -3,6 +3,7 @@ import {PlayerEntity} from "../../repository/entity/room.entity";
 
 export interface CreateRoomDto {
     quizId: number
+    player: PlayerEntity
 }
 
 export interface RoomResponseDto {

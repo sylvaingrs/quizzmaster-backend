@@ -29,5 +29,11 @@
   "packageExtensions": {},
   "pnpIgnorePatterns": [
     "**/src/generated/**"
-  ]
+  ],
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^8.2.3",
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2"
+  }
 }
