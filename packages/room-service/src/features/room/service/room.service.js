@@ -34,13 +34,13 @@ export async function getRoom(roomId) {
 /**
  * @param {string} roomId
  * @param {string} pseudo
+ * @param {string} role
  * @returns {Promise<RoomEntity>}
  */
-export async function joinRoom(roomId, pseudo) {
+export async function joinRoom(roomId, pseudo, role) {
     const room = await findRoomById(roomId)
     if (!room) throw new NotFoundError(`Room ${roomId} introuvable`)
 
-    const role = room.status === 'WAITING' ? 'PLAYER' : 'SPECTATOR'
     return joinRoomRepository(roomId, pseudo, role)
 }
 

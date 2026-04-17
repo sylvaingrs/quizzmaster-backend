@@ -15,8 +15,6 @@ import {BadRequestError, NotFoundError} from "#errors";
 export async function buzz(roomId, userId) {
     const canBuzz = await tryBuzz(roomId, userId)
 
-    // Ici je vais devoir rajouter le WS
-
     if (canBuzz){
         publish('buzzer.taken', { roomId: roomId, userId: userId })
     }

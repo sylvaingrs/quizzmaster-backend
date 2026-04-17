@@ -38,7 +38,7 @@ export async function roomRoutes(app) {
 
     app.post('/:id/join', { schema: joinRoomSchema }, async (req, reply) => {
         try {
-            const result = await joinRoom(req.params.id, req.body.pseudo)
+            const result = await joinRoom(req.params.id, req.body.pseudo, req.body.role)
             return reply.send(result)
         } catch (error) {
             return handleError(error, reply)

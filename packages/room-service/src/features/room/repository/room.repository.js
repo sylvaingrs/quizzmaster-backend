@@ -12,6 +12,7 @@ function generateRoomCode() {
 
 /**
  * @param {number} quizId
+ * @param {string} pseudo
  * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity>}
  */
 export async function createRoom(quizId, pseudo){

@@ -83,9 +83,10 @@ export const joinRoomSchema = {
     },
     body: {
         type: 'object',
-        required: ['pseudo'],
+        required: ['pseudo', 'role'],
         properties: {
-            pseudo: { type: 'string' }
+            pseudo: { type: 'string' },
+            role: { type: 'string' }
         }
     },
     response: {
