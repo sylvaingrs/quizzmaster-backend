@@ -6,6 +6,7 @@ import {getBuzzer, getCurrentQuestion, resetBuzzer, tryBuzz} from "../repository
 import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
 import {publish} from "../../../../../valkey/publisher.js";
 import {BadRequestError, NotFoundError} from "#errors";
+import {fetchLeaderboard} from "../../leaderboard/service/leaderboard.service.js";
 
 /**
  * @param {string} roomId
@@ -42,13 +43,24 @@ export async function answer(roomId, answerDto) {
     }
 
     const question = JSON.parse(currentQuestion.data)
-    const isCorrect = question.correctAnswer.includes(answerDto.answer)
+    
+    const expected = question.correctAnswer || [];
+    const provided = answerDto.answer || [];
+
+    let isCorrect = false;
+    if (Array.isArray(provided) && provided.length > 0 && provided.length === expected.length) {
+        isCorrect = expected.every(e => provided.includes(e));
+    }
 
     if (isCorrect) {
         await valkey.zincrby(`leaderboard:${roomId}`, 1, answerDto.userId)
-        const scores = await valkey.zrevrange(`leaderboard:${roomId}`, 0, -1, 'WITHSCORES')
-        publish('scores.updated', {roomId: roomId, leaderboard: scores})
+        const leaderboardData = await fetchLeaderboard(roomId)
+        publish('scores.updated', {roomId: roomId, leaderboard: leaderboardData.leaderboard})
+        publish('answer.result', { roomId, userId: answerDto.userId, correct: true, expected })
+        return {correct: isCorrect, userId: answerDto.userId}
     }
+    
+    publish('answer.result', { roomId, userId: answerDto.userId, correct: false })
     await resetBuzzer(roomId)
     publish('buzzer.reset', {roomId})
 

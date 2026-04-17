@@ -37,12 +37,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      USER_SERVICE_URL: http://user-service:3001
       ROOM_SERVICE_URL: http://room-service:3002
       QUIZ_SERVICE_URL: http://quizz-service:3003
       SCORE_SERVICE_URL: http://score-service:3004
     depends_on:
-      - user-service
       - room-service
       - quizz-service
       - score-service

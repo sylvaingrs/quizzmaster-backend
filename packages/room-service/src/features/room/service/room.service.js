@@ -18,7 +18,13 @@ import {fetchLeaderboard} from "../../leaderboard/service/leaderboard.service.js
  * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity>}
  */
 export async function create(quizId, pseudo) {
-    return createRoom(quizId, pseudo)
+    const room = await createRoom(quizId, pseudo)
+    if (room && room.players && room.players.length > 0) {
+        await valkey.hset(`room:${room.id}:players`, {
+            [room.players[0].id]: JSON.stringify({ name: room.players[0].name, role: room.players[0].role })
+        })
+    }
+    return room
 }
 
 /**
@@ -41,7 +47,19 @@ export async function joinRoom(roomId, pseudo, role) {
     const room = await findRoomById(roomId)
     if (!room) throw new NotFoundError(`Room ${roomId} introuvable`)
 
-    return joinRoomRepository(roomId, pseudo, role)
+    if (room.status !== 'WAITING') {
+        role = 'SPECTATOR';
+    }
+
+    const updatedRoom = await joinRoomRepository(roomId, pseudo, role)
+    const newPlayer = updatedRoom.players.find(p => p.name === pseudo);
+    if (newPlayer) {
+        await valkey.hset(`room:${roomId}:players`, {
+            [newPlayer.id]: JSON.stringify({ name: newPlayer.name, role: newPlayer.role })
+        })
+    }
+
+    return updatedRoom
 }
 
 /**
@@ -134,6 +152,7 @@ export async function endGame(roomId) {
         valkey.del(`room:${roomId}:currentQuestion`),
         valkey.del(`room:${roomId}:timer`),
         valkey.del(`room:${roomId}:buzzer`),
+        valkey.del(`room:${roomId}:players`),
         updateStatus(roomId, 'FINISHED'),
     ])
 

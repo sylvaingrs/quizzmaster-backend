@@ -1,14 +1,22 @@
 import Fastify from 'fastify'
 import httpProxy from '@fastify/http-proxy'
+import cors from '@fastify/cors'
 
 const app = Fastify({ logger: true })
 
+await app.register(cors, {
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+    credentials: true,
+})
 
 app.register(async (api) => {
     api.register(httpProxy, {
         upstream: process.env.ROOM_SERVICE_URL ?? 'http://localhost:3002',
         prefix: '/room',
         rewritePrefix: '',
+        websocket: true,
     })
 
     api.register(httpProxy, {

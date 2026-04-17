@@ -4,7 +4,7 @@ import {subscribe} from "@quizzmaster-backend/valkey-service/subscriber.js";
 const rooms = new Map()
 
 export async function websocketRoutes(app) {
-    app.get('/room/:id/ws', {websocket: true}, (socket, req) => {
+    app.get('/:id/ws', {websocket: true}, (socket, req) => {
         const roomId = req.params.id
         const name = `room:${roomId}`;
 
@@ -42,6 +42,10 @@ export async function startPubSub() {
 
     subscribe('buzzer.reset', (payload) => {
         broadcastToRoom(payload.roomId, { event: 'buzzer.reset' })
+    })
+
+    subscribe('answer.result', (payload) => {
+        broadcastToRoom(payload.roomId, { event: 'answer.result', userId: payload.userId, correct: payload.correct, expected: payload.expected })
     })
 
     subscribe('question.changed', (payload) => {

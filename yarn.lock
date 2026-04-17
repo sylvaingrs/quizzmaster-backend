@@ -94,7 +94,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/cors@npm:^11.2.0":
+"@fastify/cors@npm:^11.0.0, @fastify/cors@npm:^11.2.0":
   version: 11.2.0
   resolution: "@fastify/cors@npm:11.2.0"
   dependencies:
@@ -479,6 +479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/api-gateway@workspace:packages/api-gateway"
   dependencies:
+    "@fastify/cors": "npm:^11.0.0"
     "@fastify/http-proxy": "npm:^11.4.2"
     fastify: "npm:^5.8.2"
   languageName: unknown
@@ -534,6 +535,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/room-service@workspace:packages/room-service"
   dependencies:
+    "@fastify/cors": "npm:^11.0.0"
     "@fastify/swagger": "npm:^9.7.0"
     "@fastify/swagger-ui": "npm:^5.2.5"
     "@fastify/websocket": "npm:^11.2.0"

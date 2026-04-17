@@ -44,7 +44,10 @@ export const answerSchema = {
         required: ['userId', 'answer'],
         properties: {
             userId: {type: 'string'},
-            answer: {type: 'string'}
+            answer: {
+                type: 'array',
+                items: { type: 'string' }
+            }
         }
     },
     response: {

@@ -1,5 +1,6 @@
 import { prisma } from "@quizzmaster-backend/prisma";
 import crypto from 'crypto'
+import { BadRequestError } from "#errors";
  
 /** 
  * @typedef {import('./entity/room.entity.d.ts').RoomEntity} RoomEntity 
@@ -71,13 +72,20 @@ export async function findRoomById(roomId){
  * @returns {Promise<import('./types/room.entity.d.ts').RoomEntity | null>}
  */
 export async function joinRoomRepository(roomId, pseudo, role) {
-    await prisma.player.create({
-        data: {
-            roomId,
-            name: pseudo,
-            role
+    try {
+        await prisma.player.create({
+            data: {
+                roomId,
+                name: pseudo,
+                role
+            }
+        })
+    } catch (error) {
+        if (error.code === 'P2002') {
+            throw new BadRequestError(`Le pseudo '${pseudo}' est déjà pris dans cette salle.`);
         }
-    })
+        throw error;
+    }
 
     return findRoomById(roomId)
 }
