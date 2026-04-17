@@ -553,12 +553,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@quizzmaster-backend/tools@workspace:packages/tools":
-  version: 0.0.0-use.local
-  resolution: "@quizzmaster-backend/tools@workspace:packages/tools"
-  languageName: unknown
-  linkType: soft
-
 "@quizzmaster-backend/valkey-service@workspace:*, @quizzmaster-backend/valkey-service@workspace:packages/valkey":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/valkey-service@workspace:packages/valkey"
