@@ -21,3 +21,15 @@ export default defineConfig({
     adapter: () => new PrismaPg({ connectionString: process.env.DATABASE_URL }),
   },
 });
+
+
+[
+  {
+    userId: 1,
+    score: 0
+  },
+  {
+    userId: 2,
+    score: 10
+  }
+]
