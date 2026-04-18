@@ -7,6 +7,14 @@
     "start": "node src/index.js"
   },
   "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
+    "@quizzmaster-backend/logger": "workspace:^",
+    "@quizzmaster-backend/prisma": "workspace:*",
+    "@quizzmaster-backend/rabbitmq": "workspace:*",
     "fastify": "^5.8.2"
+  },
+  "imports": {
+    "#errors": "./src/errors.js"
   }
 }
