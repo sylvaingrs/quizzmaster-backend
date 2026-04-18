@@ -1,7 +1,7 @@
 import { app } from './config/fastify.js'
 import { scoreRoutes } from './features/score/controller/score.controller.js'
-import { subscribe } from '@quizzmaster-backend/rabbitmq/subscriber.js'
-import { QUEUES } from '@quizzmaster-backend/rabbitmq/queues.js'
+import { subscribe } from '../../rabbitmq/subscriber.js'
+import { QUEUES } from '../../rabbitmq/queues.js'
 import { saveCheckpoint } from './features/score/service/score.service.js'
 
 await app.register(scoreRoutes, { prefix: '/checkpoint' })
