@@ -1,6 +1,7 @@
 FROM node:24-alpine AS base
 WORKDIR /app
 RUN corepack enable
+RUN apk add --no-cache curl
 
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/releases .yarn/releases

@@ -8,15 +8,15 @@
   "scripts": {
     "dev:up": "NODE_ENV='development' docker compose -f docker-compose.dev.yml up",
     "dev:down": "docker compose -f docker-compose.dev.yml down",
-    "up": "NODE_ENV='production' docker compose up -d",
+    "up": "docker compose up -d",
     "down": "docker compose down",
     "lint": "eslint --cache . && tsc",
     "tsc": "tsc",
-    "gateway": "yarn workspace @quizzmaster-backend/api-gateway run start",
-    "user": "yarn workspace @quizzmaster-backend/user-service run start",
-    "room": "yarn workspace @quizzmaster-backend/room-service run start",
-    "quizz": "yarn workspace @quizzmaster-backend/quizz-service run start",
-    "score": "yarn workspace @quizzmaster-backend/score-service run start"
+    "gateway": "NODE_ENV='development' yarn workspace @quizzmaster-backend/api-gateway run start",
+    "user": "NODE_ENV='development' yarn workspace @quizzmaster-backend/user-service run start",
+    "room": "NODE_ENV='development' yarn workspace @quizzmaster-backend/room-service run start",
+    "quizz": "NODE_ENV='development' yarn workspace @quizzmaster-backend/quizz-service run start",
+    "score": "NODE_ENV='development' yarn workspace @quizzmaster-backend/score-service run start"
   },
   "dependencies": {
     "@fastify/swagger": "^9.7.0",

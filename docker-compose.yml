@@ -3,110 +3,187 @@ services:
     image: postgres
     container_name: postgres
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
     volumes:
       - postgres_data:/postgres/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   rabbitmq:
     image: rabbitmq:4-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+      - "${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   valkey:
     image: valkey/valkey:9.0.3-alpine
     container_name: valkey
     ports:
-      - '6379:6379'
+      - "${VALKEY_PORT}:${VALKEY_PORT}"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   api-gateway:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: api-gateway
+        SERVICE_NAME: ${API_GATEWAY_SERVICE_NAME}
     container_name: api-gateway
     ports:
-      - "3000:3000"
+      - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
     environment:
-      USER_SERVICE_URL: http://user-service:3001
-      ROOM_SERVICE_URL: http://room-service:3002
-      QUIZ_SERVICE_URL: http://quizz-service:3003
-      SCORE_SERVICE_URL: http://score-service:3004
+      NODE_ENV: production
+      USER_SERVICE_URL: ${USER_SERVICE_URL}
+      ROOM_SERVICE_URL: ${ROOM_SERVICE_URL}
+      QUIZZ_SERVICE_URL: ${QUIZZ_SERVICE_URL}
+      SCORE_SERVICE_URL: ${SCORE_SERVICE_URL}
     depends_on:
-      - user-service
-      - room-service
-      - quizz-service
-      - score-service
+      user-service:
+        condition: service_healthy
+      room-service:
+        condition: service_healthy
+      quizz-service:
+        condition: service_healthy
+      score-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:${API_GATEWAY_PORT}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   user-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: user-service
+        SERVICE_NAME: ${USER_SERVICE_NAME}
     container_name: user-service
     ports:
-      - "3001:3001"
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+    env_file:
+      - .env
+      - ./packages/prisma/.env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      NODE_ENV: production
+      ROOM_SERVICE_URL: ${ROOM_SERVICE_URL}
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:${USER_SERVICE_PORT}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   room-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: room-service
+        SERVICE_NAME: ${ROOM_SERVICE_NAME}
     container_name: room-service
     ports:
-      - "3002:3002"
+      - "${ROOM_SERVICE_PORT}:${ROOM_SERVICE_PORT}"
     environment:
-      VALKEY_HOST: valkey
-      VALKEY_PORT: 6379
-      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      NODE_ENV: production
+      QUIZZ_SERVICE_URL: ${QUIZZ_SERVICE_URL}
+      SCORE_SERVICE_URL: ${SCORE_SERVICE_URL}
+      VALKEY_HOST: ${VALKEY_HOST}
+      VALKEY_PORT: ${VALKEY_PORT}
+    env_file:
+      - .env
+      - ./packages/prisma/.env
     depends_on:
-      - valkey
-      - rabbitmq
+      valkey:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:${ROOM_SERVICE_PORT}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   quizz-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: quizz-service
+        SERVICE_NAME: ${QUIZZ_SERVICE_NAME}
     container_name: quizz-service
     ports:
-      - "3003:3003"
+      - "${QUIZZ_SERVICE_PORT}:${QUIZZ_SERVICE_PORT}"
+    env_file:
+      - .env
+      - ./packages/prisma/.env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:${QUIZZ_SERVICE_PORT}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   score-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: score-service
+        SERVICE_NAME: ${SCORE_SERVICE_NAME}
     container_name: score-service
     ports:
-      - "3004:3004"
+      - "${SCORE_SERVICE_PORT}:${SCORE_SERVICE_PORT}"
+    env_file:
+      - .env
+      - ./packages/prisma/.env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      RABBITMQ_URL: ${RABBITMQ_URL}
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:${SCORE_SERVICE_PORT}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
 volumes:
   postgres_data:

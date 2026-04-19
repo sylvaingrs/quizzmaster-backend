@@ -1,4 +1,11 @@
 import Fastify from 'fastify'
+import dotenv from 'dotenv'
+import fs from 'fs'
+import dotenvExpand from 'dotenv-expand'
+
+if (fs.existsSync('../../.env')) {
+    dotenvExpand.expand(dotenv.config({ path: '../../.env' }))
+}
 
 const app = Fastify({ logger: true })
 
@@ -10,7 +17,7 @@ app.post('/user-room', async (req, res) => {
     const { data } = req.body
     console.log('room-service data : ', data)
 
-    const result = await fetch('http://localhost:3003/room-quizz', {
+    const result = await fetch(`${process.env.QUIZZ_SERVICE_URL}/room-quizz`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data }),
@@ -19,7 +26,7 @@ app.post('/user-room', async (req, res) => {
 
     console.log('room-service result : ', r)
 
-    const result2 = await fetch('http://localhost:3004/room-score', {
+    const result2 = await fetch(`${process.env.SCORE_SERVICE_URL}/room-score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data }),
@@ -37,4 +44,4 @@ app.post('/user-room', async (req, res) => {
     return { status: 'OK', data }
 })
 
-await app.listen({ port: 3002, host: '0.0.0.0' })
+await app.listen({ port: process.env.ROOM_SERVICE_PORT, host: process.env.HOST })
