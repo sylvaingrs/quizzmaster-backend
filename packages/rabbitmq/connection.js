@@ -1,3 +1,5 @@
+import amqp from 'amqplib';
+
 let connection;
 let channel;
 

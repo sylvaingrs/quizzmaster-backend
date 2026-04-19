@@ -4,10 +4,12 @@
 
 import {getBuzzer, getCurrentQuestion, resetBuzzer, tryBuzz} from "../repository/buzzer.repository.js";
 import {valkey} from "@quizzmaster-backend/valkey-service/client.js";
-import {publish} from "../../../../../valkey/publisher.js";
+import {publish} from "@quizzmaster-backend/valkey-service/publisher.js";
+import {publish as rmqPublish} from "@quizzmaster-backend/rabbitmq-service/publisher.js";
 import {BadRequestError, NotFoundError} from "#errors";
 import {fetchLeaderboard} from "../../leaderboard/service/leaderboard.service.js";
-
+import {QUEUES} from "@quizzmaster-backend/rabbitmq-service/queues.js";
+import {getRoom} from "../../room/service/room.service.js";
 /**
  * @param {string} roomId
  * @param {string} userId
@@ -55,8 +57,20 @@ export async function answer(roomId, answerDto) {
     if (isCorrect) {
         await valkey.zincrby(`leaderboard:${roomId}`, 1, answerDto.userId)
         const leaderboardData = await fetchLeaderboard(roomId)
+        const room = await getRoom(roomId);
+
         publish('scores.updated', {roomId: roomId, leaderboard: leaderboardData.leaderboard})
         publish('answer.result', { roomId, userId: answerDto.userId, correct: true, expected })
+        try {
+            await rmqPublish(QUEUES.SCORE_PERSISTENCE, {
+                roomId: roomId,
+                questionId: question.id,
+                quizId: room.quizId,
+                scores: leaderboardData.leaderboard
+            })
+        } catch (e) {
+            throw new Error(`Erreur lors de l'envoi du message RabbitMQ: ${e.message}`)
+        }
         return {correct: isCorrect, userId: answerDto.userId}
     }
     

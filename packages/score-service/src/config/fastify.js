@@ -1,10 +1,18 @@
 import Fastify from 'fastify';
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
+import cors from '@fastify/cors'
 import {createFastifyLoggerConfig} from "@quizzmaster-backend/logger";
 
 export const app = Fastify({
     logger: createFastifyLoggerConfig('score-service'),
+})
+
+await app.register(cors, {
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+    credentials: true,
 })
 
 await app.register(swagger, {

@@ -555,6 +555,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@quizzmaster-backend/rabbitmq-service@workspace:*, @quizzmaster-backend/rabbitmq-service@workspace:packages/rabbitmq":
+  version: 0.0.0-use.local
+  resolution: "@quizzmaster-backend/rabbitmq-service@workspace:packages/rabbitmq"
+  dependencies:
+    "@quizzmaster-backend/logger": "workspace:*"
+    amqplib: "npm:1.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@quizzmaster-backend/room-service@workspace:packages/room-service":
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/room-service@workspace:packages/room-service"
@@ -565,6 +574,7 @@ __metadata:
     "@fastify/websocket": "npm:^11.2.0"
     "@quizzmaster-backend/logger": "workspace:*"
     "@quizzmaster-backend/prisma": "workspace:*"
+    "@quizzmaster-backend/rabbitmq-service": "workspace:*"
     "@quizzmaster-backend/valkey-service": "workspace:*"
     fastify: "npm:^5.8.2"
     pino-pretty: "npm:^11.0.0"
@@ -575,11 +585,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@quizzmaster-backend/score-service@workspace:packages/score-service"
   dependencies:
+    "@fastify/cors": "npm:^11.0.0"
     "@fastify/swagger": "npm:^9.7.0"
     "@fastify/swagger-ui": "npm:^5.2.5"
     "@quizzmaster-backend/logger": "workspace:^"
     "@quizzmaster-backend/prisma": "workspace:*"
-    fastify: "npm:^5.8.2"
+    "@quizzmaster-backend/rabbitmq-service": "workspace:*"
+    fastify: "npm:5.8.5"
   languageName: unknown
   linkType: soft
 
@@ -893,6 +905,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"amqplib@npm:1.0.3":
+  version: 1.0.3
+  resolution: "amqplib@npm:1.0.3"
+  dependencies:
+    buffer-more-ints: "npm:~1.0.0"
+  checksum: 10c0/0a61edff9192d545ac26f191d528cc92204e97e6fa02bb5fa38c18e4b6053c8ebd7fdfead1ab0087589e7847c6676a644fa40c5079269e081dc83f1d4a8cd6de
+  languageName: node
+  linkType: hard
+
 "ansi-regex@npm:^5.0.1":
   version: 5.0.1
   resolution: "ansi-regex@npm:5.0.1"
@@ -971,6 +992,13 @@ __metadata:
   dependencies:
     fill-range: "npm:^7.1.1"
   checksum: 10c0/7c6dfd30c338d2997ba77500539227b9d1f85e388a5f43220865201e407e076783d0881f2d297b9f80951b4c957fcf0b51c1d2d24227631643c3f7c284b0aa04
+  languageName: node
+  linkType: hard
+
+"buffer-more-ints@npm:~1.0.0":
+  version: 1.0.0
+  resolution: "buffer-more-ints@npm:1.0.0"
+  checksum: 10c0/992b4e372e2550fd92296937ddfb8e67bb6af2664a63eb46492a1fbc05447755c5d8ba23a0311b2b1193ce23349eada76e8da4af49d75872fc40a5913557665b
   languageName: node
   linkType: hard
 
@@ -1481,6 +1509,29 @@ __metadata:
   version: 5.1.0
   resolution: "fastify-plugin@npm:5.1.0"
   checksum: 10c0/61b330b8cb03a3581b796d745137499a782934abcf65dbf9a41d07248520cfd220b3ae8b16afeaf81af712e68e1ac24352895132cfeb2b372c66662c0170f365
+  languageName: node
+  linkType: hard
+
+"fastify@npm:5.8.5":
+  version: 5.8.5
+  resolution: "fastify@npm:5.8.5"
+  dependencies:
+    "@fastify/ajv-compiler": "npm:^4.0.5"
+    "@fastify/error": "npm:^4.0.0"
+    "@fastify/fast-json-stringify-compiler": "npm:^5.0.0"
+    "@fastify/proxy-addr": "npm:^5.0.0"
+    abstract-logging: "npm:^2.0.1"
+    avvio: "npm:^9.0.0"
+    fast-json-stringify: "npm:^6.0.0"
+    find-my-way: "npm:^9.0.0"
+    light-my-request: "npm:^6.0.0"
+    pino: "npm:^9.14.0 || ^10.1.0"
+    process-warning: "npm:^5.0.0"
+    rfdc: "npm:^1.3.1"
+    secure-json-parse: "npm:^4.0.0"
+    semver: "npm:^7.6.0"
+    toad-cache: "npm:^3.7.0"
+  checksum: 10c0/c12fb6cec8e9083d148edc49c99f75e518e28c1664b121085fc1392dc67cd2e132d21dd79e1ef37e1c77c5991b4854ac8850b8d5997691060ea4c13fb7421a0e
   languageName: node
   linkType: hard
 
@@ -2490,9 +2541,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-client-58582167d5b0934f0cc63850e0bcef2e3c8cfef7e9447974531bb0aacbcf7a3b@workspace:packages/prisma/src/generated/prisma":
+"prisma-client-e04f18262dc09d7c7ca25119a324910ba7e41b118013e089dc1580d1a9d048a1@workspace:packages/prisma/src/generated/prisma":
   version: 0.0.0-use.local
-  resolution: "prisma-client-58582167d5b0934f0cc63850e0bcef2e3c8cfef7e9447974531bb0aacbcf7a3b@workspace:packages/prisma/src/generated/prisma"
+  resolution: "prisma-client-e04f18262dc09d7c7ca25119a324910ba7e41b118013e089dc1580d1a9d048a1@workspace:packages/prisma/src/generated/prisma"
   dependencies:
     "@prisma/client-runtime-utils": "npm:7.5.0"
   languageName: unknown
@@ -2610,7 +2661,6 @@ __metadata:
     "@types/node": "npm:^25.5.0"
     dotenv: "npm:^17.3.1"
     pino-pretty: "npm:^13.1.3"
-    typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
 
@@ -3050,26 +3100,6 @@ __metadata:
   version: 3.14.0
   resolution: "typanion@npm:3.14.0"
   checksum: 10c0/8b03b19844e6955bfd906c31dc781bae6d7f1fb3ce4fe24b7501557013d4889ae5cefe671dafe98d87ead0adceb8afcb8bc16df7dc0bd2b7331bac96f3a7cae2
-  languageName: node
-  linkType: hard
-
-"typescript@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "typescript@npm:6.0.2"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/4b860b0bf87cc0fee0f66d8ef2640b5a8a8a8c74d1129adb82e389e5f97124383823c47946bef8a73ede371461143a3aa8544399d2133c7b2e4f07e81860af7f
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^6.0.2#optional!builtin<compat/typescript>":
-  version: 6.0.2
-  resolution: "typescript@patch:typescript@npm%3A6.0.2#optional!builtin<compat/typescript>::version=6.0.2&hash=5786d5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/49f0b84fc6ca55653e77752b8a61beabc09ee3dae5d965c31596225aa6ef213c5727b1d2e895b900416dc603854ba0872ac4a812c2a4ed6793a601f9c675de02
   languageName: node
   linkType: hard
 

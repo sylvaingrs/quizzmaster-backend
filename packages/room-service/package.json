@@ -13,6 +13,7 @@
     "@fastify/websocket": "^11.2.0",
     "@quizzmaster-backend/logger": "workspace:*",
     "@quizzmaster-backend/prisma": "workspace:*",
+    "@quizzmaster-backend/rabbitmq-service": "workspace:*",
     "@quizzmaster-backend/valkey-service": "workspace:*",
     "fastify": "^5.8.2",
     "pino-pretty": "^11.0.0"
