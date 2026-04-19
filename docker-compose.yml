@@ -2,6 +2,8 @@ services:
   postgres:
     image: postgres
     container_name: postgres
+    ports:
+      - "5432:5432"
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -9,6 +11,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
     volumes:
       - postgres_data:/postgres/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:4-management
@@ -25,6 +32,8 @@ services:
     image: valkey/valkey:9.0.3-alpine
     container_name: valkey
     restart: unless-stopped
+    ports:
+      - '6379:6379'
 
   api-gateway:
     build:
@@ -41,9 +50,24 @@ services:
       QUIZ_SERVICE_URL: http://quizz-service:3003
       SCORE_SERVICE_URL: http://score-service:3004
     depends_on:
-      - room-service
-      - quizz-service
-      - score-service
+      room-service:
+        condition: service_started
+      quizz-service:
+        condition: service_started
+      score-service:
+        condition: service_started
+
+  migrate:
+    build:
+      context: .
+    container_name: migrate
+    command: yarn workspace @quizzmaster-backend/prisma prisma migrate deploy
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   room-service:
     build:
@@ -61,11 +85,16 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     restart: unless-stopped
     depends_on:
-      - valkey
-      - rabbitmq
-      - quizz-service
-      - score-service
-      - postgres
+      migrate:
+        condition: service_completed_successfully
+      valkey:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      quizz-service:
+        condition: service_started
+      score-service:
+        condition: service_started
 
   quizz-service:
     build:
@@ -78,7 +107,8 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
 
   score-service:
     build:
@@ -92,8 +122,10 @@ services:
       RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
     restart: unless-stopped
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
 
 volumes:
   postgres_data:
