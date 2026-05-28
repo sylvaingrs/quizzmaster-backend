@@ -1,0 +1,21 @@
+{
+  "name": "@quizzmaster-backend/score-service",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.0",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
+    "@quizzmaster-backend/logger": "workspace:^",
+    "@quizzmaster-backend/prisma": "workspace:*",
+    "@quizzmaster-backend/rabbitmq-service": "workspace:*",
+    "fastify": "5.8.5"
+  },
+  "imports": {
+    "#errors": "./src/errors.js"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@quizzmaster-backend/prisma",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/prisma.js",
+  "exports": {
+    ".": "./src/prisma.js"
+  },
+  "scripts": {
+    "start": "node src/prisma.js"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "@prisma/client-runtime-utils": "^7.5.0",
+    "@yarnpkg/pnpify": "^4.1.6",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0",
+    "prisma": "^7.5.0"
+  },
+  "dependenciesMeta": {
+    "@prisma/client": {
+      "unplugged": true
+    },
+    "prisma": {
+      "unplugged": true
+    }
+  },
+  "devDependencies": {
+    "@types/pg": "^8"
+  }
+}

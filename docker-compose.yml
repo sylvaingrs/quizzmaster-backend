@@ -1,41 +1,131 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres
-    environment:
-      PGPASSWORD: root_password
-      PGDATABASE: wtd_db
-      PGUSER: wtd_user
-      POSTGRES_PASSWORD: root_password
+    container_name: postgres
     ports:
       - "5432:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+    volumes:
+      - postgres_data:/postgres/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  core-service:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+  valkey:
+    image: valkey/valkey:9.0.3-alpine
+    container_name: valkey
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+
+  api-gateway:
     build:
       context: .
+      dockerfile: Dockerfile
       args:
-        SERVICE_NAME: core
+        SERVICE_NAME: api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
     ports:
-      - "3001:3000"
+      - "3000:3000"
     environment:
-      PORT: 3000
-      PGHOST: postgres
-      PGPASSWORD: wtd_password
-      PGUSER: wtd_user
-      PGDATABASE: wtd_db
+      ROOM_SERVICE_URL: http://room-service:3002
+      QUIZ_SERVICE_URL: http://quizz-service:3003
+      SCORE_SERVICE_URL: http://score-service:3004
     depends_on:
-      - postgres
+      room-service:
+        condition: service_started
+      quizz-service:
+        condition: service_started
+      score-service:
+        condition: service_started
 
-  utils-service:
+  migrate:
     build:
       context: .
-      args:
-        SERVICE_NAME: utils
-    ports:
-      - "3002:3002"
+    container_name: migrate
+    command: yarn workspace @quizzmaster-backend/prisma prisma migrate deploy
+    restart: "no"
     environment:
-      PORT: 3002
-      CORE_SERVICE_URL: http://core-service:3000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     depends_on:
-      - core-service
+      postgres:
+        condition: service_healthy
+
+  room-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: room-service
+    container_name: room-service
+    environment:
+      VALKEY_HOST: valkey
+      VALKEY_PORT: 6379
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      QUIZ_SERVICE_URL: http://quizz-service:3003
+      SCORE_SERVICE_URL: http://score-service:3004
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      valkey:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      quizz-service:
+        condition: service_started
+      score-service:
+        condition: service_started
+
+  quizz-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: quizz-service
+    container_name: quizz-service
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_started
+
+  score-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: score-service
+    container_name: score-service
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+volumes:
+  postgres_data:

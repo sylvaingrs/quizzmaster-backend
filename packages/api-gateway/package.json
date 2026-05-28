@@ -1,0 +1,14 @@
+{
+  "name": "@quizzmaster-backend/api-gateway",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.0",
+    "@fastify/http-proxy": "^11.4.2",
+    "fastify": "^5.8.2"
+  }
+}
