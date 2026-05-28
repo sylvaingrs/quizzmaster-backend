@@ -6,12 +6,12 @@ import {
     getQuizzSchema
 } from "./dto/quizz-service.dto.js";
 
-const service = new QuizzService();
-
 /**
  * @param { import('fastify').FastifyInstance } fastify
  */
 export async function quizzController(fastify) {
+
+    const service = fastify.quizzService ?? new QuizzService();
 
     fastify.post('/quizz', { schema: createQuizzSchema }, async (request, reply) => {
         request.log.info({

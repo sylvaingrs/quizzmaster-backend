@@ -5,10 +5,11 @@ import {
     deleteQuestionSchema
 } from './dto/question-service.dto.js';
 
-const service = new QuestionService();
 
 /** @param {import('fastify').FastifyInstance} fastify */
 export async function questionController(fastify) {
+
+    const service = fastify.questionService ?? new QuestionService();
 
     fastify.get('/quizz/:quizzId/questions', { schema: getAllQuestionsSchema }, async (request, reply) => {
         request.log.info({
